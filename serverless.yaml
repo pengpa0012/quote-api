@@ -1,0 +1,56 @@
+service: serverless-test
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-southeast-1
+custom:
+  tableName: Quote
+
+resources:
+  Resources:
+    QuoteTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Quote
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+functions:
+  createQuote:
+    handler: src/functions/quote/create.createQuote
+    events:
+      - httpApi:
+          path: /create
+          method: POST
+  getQuote:
+    handler: src/functions/quote/get.getQuote
+    events:
+      - httpApi:
+          path: /get
+          method: GET
+  deleteQuote:
+    handler: src/functions/quote/delete.deleteQuote
+    events:
+      - httpApi:
+          path: /delete/{id}
+          method: DELETE
+  updateQuote:
+    handler: src/functions/quote/update.updateQuote
+    events:
+      - httpApi:
+          path: /update/{id}
+          method: PUT
+  
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
