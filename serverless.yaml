@@ -1,4 +1,4 @@
-service: serverless-test
+service: serverless-quote-api
 frameworkVersion: '3'
 
 provider:
